@@ -29,10 +29,10 @@ class DashboardFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
         recyclerViewFolders = view.findViewById(R.id.recycler_view_folders)
-        recyclerViewFolders.layoutManager = LinearLayoutManager(context)
+        recyclerViewFolders.layoutManager = GridLayoutManager(context, 2) // 폴더를 그리드 형식으로 표시
 
         recyclerViewImages = view.findViewById(R.id.recycler_view_images)
-        recyclerViewImages.layoutManager = GridLayoutManager(context, 3)
+        recyclerViewImages.layoutManager = GridLayoutManager(context, 3) // 이미지를 그리드 형식으로 표시
 
         loadFolders()
 
@@ -55,9 +55,19 @@ class DashboardFragment : Fragment() {
 
     private fun getFoldersFromAssets(context: Context?): List<String> {
         val assetManager = context?.assets
-        return assetManager?.list("")?.filter { file ->
-            assetManager.list(file)?.isNotEmpty() ?: false
-        } ?: emptyList()
+        val allFiles = assetManager?.list("") ?: return emptyList()
+
+        // 특정 폴더들 제외하기 (예: images, webkit, geoid_map)
+        val excludedFolders = listOf("images", "webkit", "geoid_map")
+        val folderList = mutableListOf<String>()
+
+        for (file in allFiles) {
+            val isFolder = assetManager.list(file)?.isNotEmpty() == true
+            if (isFolder && file !in excludedFolders) {
+                folderList.add(file)
+            }
+        }
+        return folderList
     }
 
     private fun getImagesFromFolder(context: Context?, folderName: String): List<String> {
