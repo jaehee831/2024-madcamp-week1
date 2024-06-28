@@ -1,6 +1,7 @@
 package com.example.week1_0627.ui.home
 
 import ContactsAdapter
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,18 +12,26 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.week1_0627.databinding.FragmentHomeBinding
 
 import android.content.Context
+import android.widget.Button
+import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.week1_0627.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+
+import java.io.FileOutputStream
+import java.io.InputStream
 
 class HomeFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var contactsAdapter: ContactsAdapter
+    private lateinit var contacts: MutableList<Contact>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,47 +40,74 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
+
+        // 초기화: assets 폴더에서 contacts.json 파일을 내부 저장소로 복사
+        context?.let { copyAssetsToInternalStorage(it, "contacts.json") }
+
+        contacts = loadContactsFromJson().toMutableList()
         contactsAdapter = ContactsAdapter(loadContactsFromJson())
         recyclerView.adapter = contactsAdapter
+
+        val addButton: Button = view.findViewById(R.id.button_add_contact)
+        addButton.setOnClickListener {
+            showAddContactDialog()
+        }
+
         return view
     }
 
     private fun loadContactsFromJson(): List<Contact> {
-        val inputStream = context?.assets?.open("contacts.json")
-        val reader = InputStreamReader(inputStream)
+        val file = File(context?.filesDir, "contacts.json")
+        if (!file.exists()) return emptyList()
+        val reader = file.bufferedReader()
         val contactType = object : TypeToken<List<Contact>>() {}.type
         return Gson().fromJson(reader, contactType)
     }
-}
 
-//class HomeFragment : Fragment() {
-//
-//    private var _binding: FragmentHomeBinding? = null
-//
-//    // This property is only valid between onCreateView and
-//    // onDestroyView.
-//    private val binding get() = _binding!!
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View {
-//        val homeViewModel =
-//            ViewModelProvider(this).get(HomeViewModel::class.java)
-//
-//        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-//        val root: View = binding.root
-//
-//        val textView: TextView = binding.textHome
-//        homeViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
-//        return root
-//    }
-//
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
-//}
+    private fun saveContactsToJson() {
+        val jsonString = Gson().toJson(contacts)
+        val file = File(context?.filesDir, "contacts.json")
+        file.bufferedWriter().use { it.write(jsonString) }
+    }
+
+    private fun showAddContactDialog() {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_contact, null)
+        val nameEditText: EditText = dialogView.findViewById(R.id.edit_text_name)
+        val phoneEditText: EditText = dialogView.findViewById(R.id.edit_text_phone)
+        val saveButton: Button = dialogView.findViewById(R.id.button_save)
+
+        val dialog = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .create()
+
+        saveButton.setOnClickListener {
+            val name = nameEditText.text.toString()
+            val phone = phoneEditText.text.toString()
+            if (name.isNotEmpty() && phone.isNotEmpty()) {
+                val newContact = Contact(name, phone)
+                contacts.add(newContact)
+                contactsAdapter.notifyItemInserted(contacts.size - 1)
+                saveContactsToJson()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun copyAssetsToInternalStorage(context: Context, fileName: String) { //파일 복사 메서드 추가
+        val file = File(context.filesDir, fileName)
+        if (!file.exists()) {
+            val assetManager = context.assets
+            val inputStream: InputStream = assetManager.open(fileName)
+            val outputStream: FileOutputStream = FileOutputStream(file)
+            val buffer = ByteArray(1024)
+            var length: Int
+            while (inputStream.read(buffer).also { length = it } > 0) {
+                outputStream.write(buffer, 0, length)
+            }
+            inputStream.close()
+            outputStream.close()
+        }
+    }
+}
