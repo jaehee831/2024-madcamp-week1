@@ -9,34 +9,59 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.week1_0627.databinding.FragmentDashboardBinding
 
+import android.content.Context
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.week1_0627.R
+import java.io.File
+
 class DashboardFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var recyclerViewFolders: RecyclerView
+    private lateinit var recyclerViewImages: RecyclerView
+    private lateinit var folderAdapter: FolderAdapter
+    private lateinit var imageAdapter: ImageAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        recyclerViewFolders = view.findViewById(R.id.recycler_view_folders)
+        recyclerViewFolders.layoutManager = LinearLayoutManager(context)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        recyclerViewImages = view.findViewById(R.id.recycler_view_images)
+        recyclerViewImages.layoutManager = GridLayoutManager(context, 3)
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        loadFolders()
+
+        return view
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun loadFolders() {
+        val folders = getFoldersFromAssets(context)
+        folderAdapter = FolderAdapter(folders) { folderName ->
+            loadImages(folderName)
+        }
+        recyclerViewFolders.adapter = folderAdapter
+    }
+
+    private fun loadImages(folderName: String) {
+        val images = getImagesFromFolder(context, folderName)
+        imageAdapter = ImageAdapter(images)
+        recyclerViewImages.adapter = imageAdapter
+    }
+
+    private fun getFoldersFromAssets(context: Context?): List<String> {
+        val assetManager = context?.assets
+        return assetManager?.list("")?.filter { file ->
+            assetManager.list(file)?.isNotEmpty() ?: false
+        } ?: emptyList()
+    }
+
+    private fun getImagesFromFolder(context: Context?, folderName: String): List<String> {
+        val assetManager = context?.assets
+        return assetManager?.list(folderName)?.map { "$folderName/$it" } ?: emptyList()
     }
 }
