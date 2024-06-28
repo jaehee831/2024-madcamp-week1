@@ -45,7 +45,9 @@ class HomeFragment : Fragment() {
         context?.let { copyAssetsToInternalStorage(it, "contacts.json") }
 
         contacts = loadContactsFromJson().toMutableList()
-        contactsAdapter = ContactsAdapter(loadContactsFromJson())
+        contactsAdapter = ContactsAdapter(contacts) { position ->
+            deleteContact(position)
+        }
         recyclerView.adapter = contactsAdapter
 
         val addButton: Button = view.findViewById(R.id.button_add_contact)
@@ -109,5 +111,11 @@ class HomeFragment : Fragment() {
             inputStream.close()
             outputStream.close()
         }
+    }
+
+    private fun deleteContact(position: Int) {
+        contacts.removeAt(position)
+        contactsAdapter.notifyItemRemoved(position)
+        saveContactsToJson()
     }
 }
