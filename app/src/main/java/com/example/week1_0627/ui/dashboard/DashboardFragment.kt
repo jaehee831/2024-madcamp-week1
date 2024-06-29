@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.week1_0627.R
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.File
 
 class DashboardFragment : Fragment() {
@@ -22,6 +24,7 @@ class DashboardFragment : Fragment() {
     private lateinit var recyclerViewImages: RecyclerView
     private lateinit var folderAdapter: FolderAdapter
     private lateinit var imageAdapter: ImageAdapter
+    private lateinit var favoriteImages: MutableList<String>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +37,7 @@ class DashboardFragment : Fragment() {
         recyclerViewImages = view.findViewById(R.id.recycler_view_images)
         recyclerViewImages.layoutManager = GridLayoutManager(context, 3) // 이미지를 그리드 형식으로 표시
 
+        favoriteImages = loadFavoriteImages()
         loadFolders()
 
         return view
@@ -49,7 +53,9 @@ class DashboardFragment : Fragment() {
 
     private fun loadImages(folderName: String) {
         val images = getImagesFromFolder(context, folderName)
-        imageAdapter = ImageAdapter(images)
+        imageAdapter = ImageAdapter(images) { imagePath ->
+            toggleFavorite(imagePath)
+        }
         recyclerViewImages.adapter = imageAdapter
     }
 
@@ -73,5 +79,29 @@ class DashboardFragment : Fragment() {
     private fun getImagesFromFolder(context: Context?, folderName: String): List<String> {
         val assetManager = context?.assets
         return assetManager?.list(folderName)?.map { "$folderName/$it" } ?: emptyList()
+    }
+
+    private fun loadFavoriteImages(): MutableList<String> {
+        val sharedPreferences = context?.getSharedPreferences("favorites", Context.MODE_PRIVATE)
+        val json = sharedPreferences?.getString("favorite_images", "[]")
+        val type = object : TypeToken<MutableList<String>>() {}.type
+        return Gson().fromJson(json, type)
+    }
+
+    private fun saveFavoriteImages() {
+        val sharedPreferences = context?.getSharedPreferences("favorites", Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+        val json = Gson().toJson(favoriteImages)
+        editor?.putString("favorite_images", json)
+        editor?.apply()
+    }
+
+    private fun toggleFavorite(imagePath: String) {
+        if (favoriteImages.contains(imagePath)) {
+            favoriteImages.remove(imagePath)
+        } else {
+            favoriteImages.add(imagePath)
+        }
+        saveFavoriteImages()
     }
 }

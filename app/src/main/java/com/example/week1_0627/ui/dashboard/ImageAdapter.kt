@@ -4,13 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.week1_0627.R
 
 class ImageAdapter(
-    private val images: List<String>
+    private val images: List<String>,
+    private val onFavoriteClick: (String) -> Unit
 ) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
@@ -23,11 +25,16 @@ class ImageAdapter(
         Glide.with(holder.itemView.context)
             .load("file:///android_asset/$imagePath")
             .into(holder.imageView)
+
+        holder.favoriteButton.setOnClickListener {
+            onFavoriteClick(imagePath)
+        }
     }
 
     override fun getItemCount(): Int = images.size
 
     class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.image_view)
+        val favoriteButton: Button = itemView.findViewById(R.id.button_favorite_image)
     }
 }
