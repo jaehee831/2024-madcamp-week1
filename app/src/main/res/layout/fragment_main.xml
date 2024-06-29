@@ -25,6 +25,7 @@
         android:orientation="vertical"
         android:padding="16dp"
         android:gravity="center"
+        android:alpha="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -34,6 +35,7 @@
             android:layout_height="173dp"
             android:fontFamily="@font/pretendard"
             android:lineSpacingExtra="6dp"
+            android:alpha="0"
             android:text="Discover your ideal fitness coach"
             android:textColor="#FFFFFF"
             android:textSize="32sp" />
