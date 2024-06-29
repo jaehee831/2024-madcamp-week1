@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.week1_0627.databinding.FragmentHomeBinding
 
 import android.content.Context
 import android.widget.Button
@@ -20,9 +17,6 @@ import com.example.week1_0627.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
-import java.io.IOException
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
 
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -32,6 +26,7 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var contactsAdapter: ContactsAdapter
     private lateinit var contacts: MutableList<Contact>
+    private lateinit var favoriteContacts: MutableList<Contact>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,9 +40,13 @@ class HomeFragment : Fragment() {
         context?.let { copyAssetsToInternalStorage(it, "contacts.json") }
 
         contacts = loadContactsFromJson().toMutableList()
-        contactsAdapter = ContactsAdapter(contacts) { position ->
+        favoriteContacts = loadFavoriteContacts()
+
+        contactsAdapter = ContactsAdapter(contacts, { position ->
             deleteContact(position)
-        }
+        }, { contact ->
+            toggleFavorite(contact)
+        })
         recyclerView.adapter = contactsAdapter
 
         val addButton: Button = view.findViewById(R.id.button_add_contact)
@@ -70,6 +69,30 @@ class HomeFragment : Fragment() {
         val jsonString = Gson().toJson(contacts)
         val file = File(context?.filesDir, "contacts.json")
         file.bufferedWriter().use { it.write(jsonString) }
+    }
+
+    private fun loadFavoriteContacts(): MutableList<Contact> {
+        val sharedPreferences = context?.getSharedPreferences("favorites", Context.MODE_PRIVATE)
+        val json = sharedPreferences?.getString("favorite_contacts", "[]")
+        val contactType = object : TypeToken<MutableList<Contact>>() {}.type
+        return Gson().fromJson(json, contactType)
+    }
+
+    private fun saveFavoriteContacts() {
+        val sharedPreferences = context?.getSharedPreferences("favorites", Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+        val json = Gson().toJson(favoriteContacts)
+        editor?.putString("favorite_contacts", json)
+        editor?.apply()
+    }
+
+    private fun toggleFavorite(contact: Contact) {
+        if (favoriteContacts.contains(contact)) {
+            favoriteContacts.remove(contact)
+        } else {
+            favoriteContacts.add(contact)
+        }
+        saveFavoriteContacts()
     }
 
     private fun showAddContactDialog() {

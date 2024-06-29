@@ -9,7 +9,8 @@ import com.example.week1_0627.ui.home.Contact
 
 class ContactsAdapter(
     private val contacts: MutableList<Contact>,
-    private val onDeleteClick: (Int) -> Unit
+    private val onDeleteClick: (Int) -> Unit,
+    private val onFavoriteClick: (Contact) -> Unit
 ) : RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -24,6 +25,9 @@ class ContactsAdapter(
         holder.deleteButton.setOnClickListener {
             onDeleteClick(position)
         }
+        holder.favoriteButton.setOnClickListener {
+            onFavoriteClick(contact)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -34,5 +38,6 @@ class ContactsAdapter(
         val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
         val phoneTextView: TextView = itemView.findViewById(R.id.phoneTextView)
         val deleteButton: Button = itemView.findViewById(R.id.button_delete_contact)
+        val favoriteButton: Button = itemView.findViewById(R.id.button_favorite)
     }
 }
