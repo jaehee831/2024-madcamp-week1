@@ -7,10 +7,10 @@
     android:gravity="center">
 
     <ImageView
-        android:id="@+id/folder_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_folder" /> <!-- 적절한 폴더 아이콘 drawable 사용 -->
+        android:id="@+id/folder_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/folder_name"

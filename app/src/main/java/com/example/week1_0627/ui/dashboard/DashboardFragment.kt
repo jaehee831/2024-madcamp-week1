@@ -45,7 +45,7 @@ class DashboardFragment : Fragment() {
 
     private fun loadFolders() {
         val folders = getFoldersFromAssets(context)
-        folderAdapter = FolderAdapter(folders) { folderName ->
+        folderAdapter = FolderAdapter(requireContext(), folders) { folderName ->
             loadImages(folderName)
         }
         recyclerViewFolders.adapter = folderAdapter
