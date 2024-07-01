@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.week1_0627.databinding.FragmentDashboardBinding
 
 import android.content.Context
+import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,9 +35,6 @@ class DashboardFragment : Fragment() {
         recyclerViewFolders = view.findViewById(R.id.recycler_view_folders)
         recyclerViewFolders.layoutManager = GridLayoutManager(context, 2) // 폴더를 그리드 형식으로 표시
 
-        recyclerViewImages = view.findViewById(R.id.recycler_view_images)
-        recyclerViewImages.layoutManager = GridLayoutManager(context, 3) // 이미지를 그리드 형식으로 표시
-
         favoriteImages = loadFavoriteImages()
         loadFolders()
 
@@ -45,6 +43,7 @@ class DashboardFragment : Fragment() {
 
     private fun loadFolders() {
         val folders = getFoldersFromAssets(context)
+        Log.d("DashboardFragment", "Number of folders: ${folders.size}")
         folderAdapter = FolderAdapter(requireContext(), folders) { folderName ->
             loadImages(folderName)
         }
@@ -73,6 +72,9 @@ class DashboardFragment : Fragment() {
                 folderList.add(file)
             }
         }
+
+        Log.d("DashboardFragment", "Loaded folders: $folderList")
+
         return folderList
     }
 

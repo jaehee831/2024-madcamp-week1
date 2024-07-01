@@ -32,7 +32,7 @@ class FolderAdapter(
                 .load("file:///android_asset/$firstImagePath")
                 .into(holder.folderImageView)
         } else {
-            holder.folderImageView.setImageResource(R.drawable.ic_folder) // 기본 아이콘 설정
+            holder.folderImageView.setImageResource(R.drawable.ic_folder)
         }
 
         holder.itemView.setOnClickListener {
