@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -35,6 +36,6 @@ class ImageAdapter(
 
     class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.image_view)
-        val favoriteButton: Button = itemView.findViewById(R.id.button_favorite_image)
+        val favoriteButton: ImageButton = itemView.findViewById(R.id.button_favorite_image)
     }
 }

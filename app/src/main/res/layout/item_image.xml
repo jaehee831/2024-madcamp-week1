@@ -11,10 +11,11 @@
         android:adjustViewBounds="true"
         android:scaleType="centerInside"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/button_favorite_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
-        android:text="★"/>
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_star_shadow" />
 </FrameLayout>
