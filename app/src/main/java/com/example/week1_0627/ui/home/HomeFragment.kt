@@ -99,6 +99,7 @@ class HomeFragment : Fragment() {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_contact, null)
         val nameEditText: EditText = dialogView.findViewById(R.id.edit_text_name)
         val phoneEditText: EditText = dialogView.findViewById(R.id.edit_text_phone)
+        val exerciseEditText: EditText = dialogView.findViewById(R.id.edit_text_exercise)
         val saveButton: Button = dialogView.findViewById(R.id.button_save)
 
         val dialog = AlertDialog.Builder(context)
@@ -108,8 +109,10 @@ class HomeFragment : Fragment() {
         saveButton.setOnClickListener {
             val name = nameEditText.text.toString()
             val phone = phoneEditText.text.toString()
+            val exercise = exerciseEditText.text.toString()
+
             if (name.isNotEmpty() && phone.isNotEmpty()) {
-                val newContact = Contact(name, phone)
+                val newContact = Contact(name, phone, exercise)
                 contacts.add(newContact)
                 contactsAdapter.notifyItemInserted(contacts.size - 1)
                 saveContactsToJson()

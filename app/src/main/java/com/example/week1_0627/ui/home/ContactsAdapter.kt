@@ -24,6 +24,7 @@ class ContactsAdapter(
         val contact = contacts[position]
         holder.nameTextView.text = contact.name
         holder.phoneTextView.text = contact.phone
+        holder.exerciseTextView.text = contact.exercise
         holder.deleteButton.setOnClickListener {
             onDeleteClick(position)
         }
@@ -45,6 +46,7 @@ class ContactsAdapter(
     class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
         val phoneTextView: TextView = itemView.findViewById(R.id.phoneTextView)
+        val exerciseTextView: TextView = itemView.findViewById(R.id.exerciseTextView)
         val deleteButton: Button = itemView.findViewById(R.id.button_delete_contact)
         val favoriteButton: Button = itemView.findViewById(R.id.button_favorite)
         val dialButton: Button = itemView.findViewById(R.id.button_dial_contact)
