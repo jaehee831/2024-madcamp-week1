@@ -25,9 +25,11 @@ class ImageViewerActivity : AppCompatActivity() {
         // Support Action Bar 설정
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        val folderName = intent.getStringExtra("folderName")
+        // 상단 액션바 제목을 폴더 이름으로 설정
+        supportActionBar?.title = folderName
         favoriteImages = loadFavoriteImages()
 
-        val folderName = intent.getStringExtra("folderName")
         if (folderName == null) {
             Toast.makeText(this, "폴더 이름을 받아오지 못했습니다.", Toast.LENGTH_SHORT).show()
             finish()
@@ -66,7 +68,6 @@ class ImageViewerActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        // 필요한 추가 코드 (예: 인텐트 설정) 삽입
         super.onBackPressed()
     }
 
