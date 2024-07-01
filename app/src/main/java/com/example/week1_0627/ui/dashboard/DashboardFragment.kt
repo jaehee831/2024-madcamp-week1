@@ -4,20 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.week1_0627.databinding.FragmentDashboardBinding
 
 import android.content.Context
 import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.week1_0627.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.io.File
 
 class DashboardFragment : Fragment() {
 
@@ -52,7 +47,7 @@ class DashboardFragment : Fragment() {
 
     private fun loadImages(folderName: String) {
         val images = getImagesFromFolder(context, folderName)
-        imageAdapter = ImageAdapter(images) { imagePath ->
+        imageAdapter = ImageAdapter(images as MutableList<String>) { imagePath ->
             toggleFavorite(imagePath)
         }
         recyclerViewImages.adapter = imageAdapter

@@ -42,7 +42,7 @@ class ImageViewerActivity : AppCompatActivity() {
 
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view_images)
         recyclerView.layoutManager = GridLayoutManager(this, 3)
-        recyclerView.adapter = ImageAdapter(images){ imagePath ->
+        recyclerView.adapter = ImageAdapter(images.toMutableList()){ imagePath ->
             toggleFavorite(imagePath)
         }
     }

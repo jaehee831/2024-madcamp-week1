@@ -20,6 +20,7 @@ class ContactsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var contactsAdapter: ContactsAdapter
     private lateinit var favoriteContacts: MutableList<Contact>
+    private lateinit var favoriteImages: MutableList<String>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

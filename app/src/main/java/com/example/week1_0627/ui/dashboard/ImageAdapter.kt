@@ -1,10 +1,8 @@
 package com.example.week1_0627.ui.dashboard
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.week1_0627.R
 
 class ImageAdapter(
-    private val images: List<String>,
+    private val images: MutableList<String>,
     private val onFavoriteClick: (String) -> Unit
 ) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
@@ -33,6 +31,14 @@ class ImageAdapter(
     }
 
     override fun getItemCount(): Int = images.size
+
+    fun removeImage(imagePath: String) {
+        val position = images.indexOf(imagePath)
+        if (position >= 0) {
+            images.removeAt(position)
+            notifyItemRemoved(position)
+        }
+    }
 
     class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.image_view)

@@ -33,6 +33,9 @@ class ImagesFragment : Fragment() {
         imageAdapter = ImageAdapter(favoriteImages) { imagePath ->
             // 즐겨찾기 탭에서는 클릭 시 아무 동작하지 않음
         }
+        imageAdapter = ImageAdapter(favoriteImages) { imagePath ->
+            removeFavoriteImage(imagePath)
+        }
         recyclerView.adapter = imageAdapter
 
         return view
@@ -42,5 +45,19 @@ class ImagesFragment : Fragment() {
         val json = sharedPreferences?.getString("favorite_images", "[]")
         val type = object : TypeToken<MutableList<String>>() {}.type
         return Gson().fromJson(json, type)
+    }
+
+    private fun saveFavoriteImages() {
+        val sharedPreferences = context?.getSharedPreferences("favorites", Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+        val json = Gson().toJson(favoriteImages)
+        editor?.putString("favorite_images", json)
+        editor?.apply()
+    }
+
+    private fun removeFavoriteImage(imagePath: String) {
+        favoriteImages.remove(imagePath)
+        imageAdapter.removeImage(imagePath)
+        saveFavoriteImages()
     }
 }
