@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:text="Add Contact"
         android:layout_gravity="center"
-        android:layout_margin="16dp"/>
+        android:layout_margin="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
