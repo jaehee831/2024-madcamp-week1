@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginBottom="5dp" />
 
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Phone"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:layout_marginBottom="2dp" />
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Exercise"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:layout_marginBottom="16dp" />
 
     <LinearLayout
