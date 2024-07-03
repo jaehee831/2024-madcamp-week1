@@ -8,17 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.week1_0627.R
 import com.example.week1_0627.ui.home.Contact
-<<<<<<< Updated upstream
-
-class ContactsAdapter(
-    private val contacts: MutableList<Contact>,
-    private val onDeleteClick: (Int) -> Unit
-) : RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>() {
-=======
-import android.content.Intent
-import android.net.Uri
 import android.widget.Filter
 import android.widget.Filterable
+
 
 class ContactsAdapter(
     private val contacts: MutableList<Contact>,
@@ -27,10 +19,9 @@ class ContactsAdapter(
 ) : RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>(), Filterable {
 
     private var filteredContacts: MutableList<Contact> = contacts.toMutableList()
->>>>>>> Stashed changes
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.contact_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false)
         return ContactViewHolder(view)
     }
 
@@ -40,6 +31,9 @@ class ContactsAdapter(
         holder.phoneTextView.text = contact.phone
         holder.deleteButton.setOnClickListener {
             onDeleteClick(position)
+        }
+        holder.favoriteButton.setOnClickListener {
+            onFavoriteClick(contact)
         }
     }
 
@@ -75,5 +69,6 @@ class ContactsAdapter(
         val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
         val phoneTextView: TextView = itemView.findViewById(R.id.phoneTextView)
         val deleteButton: Button = itemView.findViewById(R.id.button_delete_contact)
+        val favoriteButton: Button = itemView.findViewById(R.id.button_favorite)
     }
 }
