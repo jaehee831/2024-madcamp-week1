@@ -1,6 +1,7 @@
 # Trainer Hub
-
-<img src="https://github.com/jaehee831/2024-madcamp-week1/assets/108858918/be1976d2-47a9-42b1-b3d6-5f1b30a120fe" alt="logo" width="600">
+<p align="center">
+  <img src="https://github.com/jaehee831/2024-madcamp-week1/assets/108858918/be1976d2-47a9-42b1-b3d6-5f1b30a120fe" alt="logo" width="600">
+</p>
 
 ### 내 맘에 쏙 드는 트레이너쌤, Trainer Hub에서 찾자! ⚽
 
