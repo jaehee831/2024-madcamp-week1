@@ -9,7 +9,7 @@ import com.example.week1_0627.ui.home.Contact
 import android.content.Intent
 import android.net.Uri
 
-class ContactsAdapter(
+class ContactsAdapter( // RecyclerView.Adapter 상속받아 contacts list 표시
     private val contacts: MutableList<Contact>,
     private val onDeleteClick: (Int) -> Unit,
     private val onFavoriteClick: (Contact) -> Unit

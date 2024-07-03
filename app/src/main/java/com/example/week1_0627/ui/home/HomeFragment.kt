@@ -23,30 +23,33 @@ import java.io.InputStream
 
 class HomeFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView // 변수 초기화를 나중으로 미룸
     private lateinit var contactsAdapter: ContactsAdapter
     private lateinit var contacts: MutableList<Contact>
     private lateinit var favoriteContacts: MutableList<Contact>
 
+    // Fragment의 UI 초기화
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View? { // nullable 객체 선언
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        // 초기화: assets 폴더에서 contacts.json 파일을 내부 저장소로 복사
-        context?.let { copyAssetsToInternalStorage(it, "contacts.json") }
+        // 폴더에서 contacts.json 파일을 내부 저장소로 복사
+        context?.let { copyAssetsToInternalStorage(it, "contacts.json") } //context가 null이 아닐 때만 작업 수행
 
         contacts = loadContactsFromJson().toMutableList()
         favoriteContacts = loadFavoriteContacts()
 
+        // contacts 데이터 recyclerview에 바인딩, 아이템 클릭 이벤트 처리
         contactsAdapter = ContactsAdapter(contacts, { position ->
             deleteContact(position)
         }, { contact ->
             toggleFavorite(contact)
-        })
+        }) // lambda 함수, posiiton 및 contact 받아서 각 메서드 실행
+
         recyclerView.adapter = contactsAdapter
 
         val addButton: Button = view.findViewById(R.id.button_add_contact)
@@ -62,7 +65,7 @@ class HomeFragment : Fragment() {
         if (!file.exists()) return emptyList()
         val reader = file.bufferedReader()
         val contactType = object : TypeToken<List<Contact>>() {}.type
-        return Gson().fromJson(reader, contactType)
+        return Gson().fromJson(reader, contactType) // JSON 데이터를 자바 객체로 변환하거나 그 반대로 변환
     }
 
     private fun saveContactsToJson() {
@@ -72,7 +75,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadFavoriteContacts(): MutableList<Contact> {
-        val sharedPreferences = context?.getSharedPreferences("favorites", Context.MODE_PRIVATE)
+        val sharedPreferences = context?.getSharedPreferences("favorites", Context.MODE_PRIVATE) // favorites 파일에 저장된 객체 가져옴
         val json = sharedPreferences?.getString("favorite_contacts", "[]")
         val contactType = object : TypeToken<MutableList<Contact>>() {}.type
         return Gson().fromJson(json, contactType)
