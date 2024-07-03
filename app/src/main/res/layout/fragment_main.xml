@@ -39,7 +39,8 @@
             android:lineSpacingExtra="5dp"
             android:text="Discover your ideal fitness coach"
             android:textColor="#FFFFFF"
-            android:textSize="28dp" />
+            android:textSize="28dp"
+            android:layout_marginTop="16dp"/>
 
     </LinearLayout>
 
