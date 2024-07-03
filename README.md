@@ -46,7 +46,7 @@
 
 💡FrontEnd - Kotlin 
 
-💡FrontEnd - Android Studio 
+💡IDE - Android Studio 
 
 
 
