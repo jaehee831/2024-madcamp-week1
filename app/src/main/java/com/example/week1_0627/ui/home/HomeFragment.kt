@@ -27,7 +27,14 @@ import java.io.OutputStreamWriter
 import java.io.FileOutputStream
 import java.io.InputStream
 
+import androidx.appcompat.widget.SearchView
+import android.util.Log // Log 클래스 가져오기
+
 class HomeFragment : Fragment() {
+
+    companion object {
+        private const val TAG = "YourActivityOrFragment" // 로그 태그 정의
+    }
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var contactsAdapter: ContactsAdapter
@@ -54,6 +61,19 @@ class HomeFragment : Fragment() {
         addButton.setOnClickListener {
             showAddContactDialog()
         }
+
+        val searchView: SearchView=view.findViewById(R.id.search_view)
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean{
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean{
+                contactsAdapter.filter.filter(newText)
+                Log.d(TAG, "SearchView Text is changed : $newText")
+                return true
+            }
+        })
 
         return view
     }
